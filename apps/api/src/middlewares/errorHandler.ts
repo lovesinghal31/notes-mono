@@ -3,6 +3,7 @@ import type { NextFunction, Request, Response } from "express"
 import { env } from "@/config/env.js"
 import { logger } from "@/logger/index.js"
 import { ApiError } from "@mono-fun/types"
+import { Prisma } from "@/generated/prisma/client.js"
 
 class ErrorMiddleware {
   private static instance: ErrorMiddleware
@@ -47,6 +48,27 @@ class ErrorMiddleware {
         ...(env.NODE_ENV === "development" && {
           stack: err.stack,
         }),
+      })
+    }
+
+    // Prisma Known Request Errors
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      let message = "Database error"
+      switch (err.code) {
+        case "P2002":
+          message = "Unique constraint failed"
+          break
+        case "P2003":
+          message = "Foreign key constraint failed"
+          break
+        case "P2025":
+          message = "Record not found"
+          break
+        // Add more cases as needed
+      }
+      return res.status(400).json({
+        success: false,
+        message,
       })
     }
 
