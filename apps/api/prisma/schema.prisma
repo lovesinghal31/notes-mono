@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum NoteStatus {
+  ACTIVE
+  ARCHIVED
+  TRASHED
+}
+
+model user {
+  id            String @id @default(uuid())
+  name          String
+  email         String @unique
+  password_hash String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  notes   note[]
+  folders folder[]
+  tags    tag[]
+
+  @@index([email, id])
+}
+
+model folder {
+  id String @id @default(uuid())
+
+  user_id         String
+  name            String
+  normalized_name String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user user @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  notes note[]
+
+  @@unique([user_id, normalized_name])
+  @@index([user_id])
+}
+
+model note {
+  id String @id @default(uuid())
+
+  user_id   String
+  folder_id String?
+
+  title   String?
+  content String
+
+  status NoteStatus @default(ACTIVE)
+
+  is_pinned   Boolean @default(false)
+  is_favorite Boolean @default(false)
+
+  deleted_at DateTime?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user user @relation(fields: [user_id], references: [id])
+
+  folder folder? @relation(fields: [folder_id], references: [id], onDelete: SetNull)
+
+  note_tags    note_tag[]
+  public_share public_share?
+
+  @@index([user_id])
+  @@index([folder_id])
+  @@index([user_id, status])
+  @@index([user_id, is_pinned])
+  @@index([user_id, is_favorite])
+  @@index([created_at])
+}
+
+model tag {
+  id String @id @default(uuid())
+
+  user_id         String
+  name            String
+  normalized_name String
+
+  created_at DateTime @default(now())
+
+  user user @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  note_tags note_tag[]
+
+  @@unique([user_id, normalized_name])
+  @@index([user_id])
+}
+
+model note_tag {
+  note_id String
+  tag_id  String
+
+  note note @relation(fields: [note_id], references: [id], onDelete: Cascade)
+
+  tag tag @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+
+  @@id([note_id, tag_id])
+  @@index([note_id])
+  @@index([tag_id])
+}
+
+model public_share {
+  id String @id @default(uuid())
+
+  note_id String @unique
+
+  slug      String  @unique
+  is_active Boolean @default(true)
+
+  expires_at DateTime?
+
+  created_at DateTime @default(now())
+
+  note note @relation(fields: [note_id], references: [id], onDelete: Cascade)
+}
