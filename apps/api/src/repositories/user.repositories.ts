@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma"
+import { prisma } from "@/lib/prisma.js"
 
 export class UserRepository {
   private readonly userSelect = {
@@ -9,18 +9,14 @@ export class UserRepository {
     updated_at: true,
   } as const
 
-  public async findByEmail(
-    email: string
-  ) {
+  public async findByEmail(email: string) {
     return prisma.user.findUnique({
       where: { email },
       select: this.userSelect,
     })
   }
 
-  public async findByEmailWithPassword(
-    email: string
-  ) {
+  public async findByEmailWithPassword(email: string) {
     return prisma.user.findUnique({
       where: { email },
       select: {
@@ -30,34 +26,25 @@ export class UserRepository {
     })
   }
 
-  public async findById(
-    id: string
-  ) {
+  public async findById(id: string) {
     return prisma.user.findUnique({
       where: { id },
       select: this.userSelect,
     })
   }
 
-  public async existsByEmail(
-    email: string
-  ): Promise<boolean> {
-    const user =
-      await prisma.user.findUnique({
-        where: { email },
-        select: {
-          id: true,
-        },
-      })
+  public async existsByEmail(email: string): Promise<boolean> {
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+      },
+    })
 
     return !!user
   }
 
-  public async create(
-    name: string,
-    email: string,
-    password_hash: string
-  ) {
+  public async create(name: string, email: string, password_hash: string) {
     return prisma.user.create({
       data: {
         name,
@@ -83,9 +70,7 @@ export class UserRepository {
     })
   }
 
-  public async delete(
-    id: string
-  ) {
+  public async delete(id: string) {
     return prisma.user.delete({
       where: { id },
     })

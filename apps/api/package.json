@@ -9,6 +9,7 @@
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit"
   },
+  "type": "module",
   "dependencies": {
     "@mono-fun/types": "workspace:*",
     "@mono-fun/utils": "workspace:*",

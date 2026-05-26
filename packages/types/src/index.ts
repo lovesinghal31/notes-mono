@@ -1,3 +1,4 @@
 export * from "./ApiError.js"
 export * from "./ApiResponse.js"
 export * from "./UserType.js"
+export * from "./schemas/user-schema.js"
