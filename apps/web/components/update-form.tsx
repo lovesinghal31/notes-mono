@@ -26,44 +26,36 @@ import {
 import {
   ApiResponse,
   IUser,
-  userSignUpSchema,
-  type UserSignUpSchemaType,
+  userUpdateSchema,
+  type UserUpdateSchemaType,
 } from "@mono-fun/types"
-import axios from "axios"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { getErrorMessage } from "@/lib/error-handler"
 import { Input } from "@workspace/ui/components/input"
 import { EyeIcon, EyeOffIcon, LoaderCircleIcon } from "lucide-react"
 import Link from "next/link"
+import { api } from "@/lib/api"
 
-export function RegisterForm() {
+export function UpdateForm() {
   const router = useRouter()
   const [showPassword, setShowPassword] = React.useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
-  const form = useForm<UserSignUpSchemaType>({
-    resolver: zodResolver(userSignUpSchema),
+  const form = useForm<UserUpdateSchemaType>({
+    resolver: zodResolver(userUpdateSchema),
     defaultValues: {
       name: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
   })
-  async function onSubmit(data: UserSignUpSchemaType) {
+  async function onSubmit(data: UserUpdateSchemaType) {
     try {
       setIsSubmitting(true)
-      const response = await axios.post<ApiResponse<IUser>>(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/register`,
-        data,
-        {
-          withCredentials: true,
-        }
-      )
+      const response = await api.put<ApiResponse<IUser>>("/users/update", data)
       if (response.data.success) {
-        toast.success("Registration successful! Please log in.")
-        router.push("/auth/login")
+        toast.success("Profile updated successfully!")
+        router.push("/dashboard/me")
       }
     } catch (error) {
       const message = getErrorMessage(error)
@@ -76,26 +68,27 @@ export function RegisterForm() {
   return (
     <Card className="w-full max-w-md text-sm/relaxed">
       <CardHeader className="px-4 sm:px-6">
-        <CardTitle className="text-base font-semibold">Register</CardTitle>
+        <CardTitle className="text-base font-semibold">
+          Update Profile
+        </CardTitle>
         <CardDescription className="text-sm/relaxed">
-          Create an account to manage your notes and access all features.
-          It&apos;s quick and easy!
+          Update your profile information at any time.
         </CardDescription>
       </CardHeader>
       <CardContent className="px-4 sm:px-6">
-        <form id="form-register" onSubmit={form.handleSubmit(onSubmit)}>
+        <form id="form-update" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
             <Controller
               name="name"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel className="text-sm" htmlFor="form-register-name">
+                  <FieldLabel className="text-sm" htmlFor="form-update-name">
                     Name
                   </FieldLabel>
                   <Input
                     {...field}
-                    id="form-register-name"
+                    id="form-update-name"
                     aria-invalid={fieldState.invalid}
                     className="h-9 px-3 text-base sm:h-8 md:text-sm/relaxed"
                     placeholder="Enter your name"
@@ -112,13 +105,13 @@ export function RegisterForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel className="text-sm" htmlFor="form-register-email">
+                  <FieldLabel className="text-sm" htmlFor="form-update-email">
                     Email
                   </FieldLabel>
                   <Input
                     {...field}
                     type="email"
-                    id="form-register-email"
+                    id="form-update-email"
                     aria-invalid={fieldState.invalid}
                     className="h-9 px-3 text-base sm:h-8 md:text-sm/relaxed"
                     placeholder="Enter your email"
@@ -135,7 +128,7 @@ export function RegisterForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-register-password">
+                  <FieldLabel htmlFor="form-update-password">
                     Password
                   </FieldLabel>
                   <InputGroup
@@ -145,7 +138,7 @@ export function RegisterForm() {
                     <InputGroupInput
                       {...field}
                       type={showPassword ? "text" : "password"}
-                      id="form-register-password"
+                      id="form-update-password"
                       aria-invalid={fieldState.invalid}
                       className="h-9 px-3 text-base sm:h-8 md:text-sm/relaxed"
                       placeholder="Enter your password"
@@ -162,49 +155,6 @@ export function RegisterForm() {
                         onClick={() => setShowPassword((v) => !v)}
                       >
                         {showPassword ? <EyeOffIcon /> : <EyeIcon />}
-                      </InputGroupButton>
-                    </InputGroupAddon>
-                  </InputGroup>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-            <Controller
-              name="confirmPassword"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-register-confirm-password">
-                    Confirm Password
-                  </FieldLabel>
-                  <InputGroup
-                    className="h-9 sm:h-8"
-                    data-invalid={fieldState.invalid}
-                  >
-                    <InputGroupInput
-                      {...field}
-                      type={showConfirmPassword ? "text" : "password"}
-                      id="form-register-confirm-password"
-                      aria-invalid={fieldState.invalid}
-                      className="h-9 px-3 text-base sm:h-8 md:text-sm/relaxed"
-                      placeholder="Confirm your password"
-                      autoComplete="off"
-                    />
-                    <InputGroupAddon align="inline-end">
-                      <InputGroupButton
-                        size="icon-sm"
-                        tabIndex={-1}
-                        aria-label={
-                          showConfirmPassword
-                            ? "Hide password"
-                            : "Show password"
-                        }
-                        onMouseDown={(e) => e.preventDefault()}
-                        onClick={() => setShowConfirmPassword((v) => !v)}
-                      >
-                        {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
                       </InputGroupButton>
                     </InputGroupAddon>
                   </InputGroup>
@@ -235,13 +185,13 @@ export function RegisterForm() {
             size="lg"
             type="submit"
             className="flex-1 sm:flex-none"
-            form="form-register"
+            form="form-update"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
               <>
                 <LoaderCircleIcon className="mr-2 size-4 animate-spin" />
-                Submitting...
+                Updating...
               </>
             ) : (
               "Submit"
@@ -251,10 +201,10 @@ export function RegisterForm() {
       </CardFooter>
       <div className="px-4 pb-4 text-center text-sm text-muted-foreground sm:px-6 sm:pb-6">
         <Link
-          href="/auth/login"
+          href="/dashboard/me"
           className="text-sm text-primary hover:underline"
         >
-          Already have an account? Log in
+          Back to Profile
         </Link>
       </div>
     </Card>

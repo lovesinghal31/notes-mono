@@ -103,6 +103,7 @@ export class UserController {
         email: parsedData.data.email,
         password: parsedData.data.password,
       })
+      cache.delete(`user:${userId}`)
       return res
         .status(200)
         .json(
@@ -130,6 +131,7 @@ export class UserController {
         throw new ApiError(400, errorMessages.join(", "))
       }
       const { message } = await this.userService.delete(parsedData.data.id)
+      cache.delete(`user:${userId}`)
       return res.status(200).json(new ApiResponse(true, message))
     } catch (error) {
       next(error)

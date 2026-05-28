@@ -191,7 +191,10 @@ export function LoginForm() {
         </Field>
       </CardFooter>
       <div className="px-4 pb-4 text-center text-sm text-muted-foreground sm:px-6 sm:pb-6">
-        <Link href="/register" className="text-sm text-primary hover:underline">
+        <Link
+          href="/auth/register"
+          className="text-sm text-primary hover:underline"
+        >
           Don&apos;t have an account? Register here.
         </Link>
       </div>

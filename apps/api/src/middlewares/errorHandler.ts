@@ -56,7 +56,7 @@ class ErrorMiddleware {
       let message = "Database error"
       switch (err.code) {
         case "P2002":
-          message = "Unique constraint failed"
+          message = "Unique constraint failed (input contains duplicate value)"
           break
         case "P2003":
           message = "Foreign key constraint failed"
