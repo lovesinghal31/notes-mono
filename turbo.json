@@ -5,8 +5,8 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**","dist/**", "!.turbo/**"],
-      "env": ["PORT"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "!.turbo/**"],
+      "env": ["PORT", "NEXT_PUBLIC_API_URL","DATABASE_URL"]
     },
     "lint": {
       "dependsOn": ["^lint"]
