@@ -10,12 +10,14 @@ import { UserService } from "@/services/user.service.js"
 import type { ILoginResponse, IUser } from "@mono-fun/types"
 import { cookies } from "@/lib/cookies.js"
 import { cache } from "@/lib/cache.js"
+import { logger } from "@/logger/index.js"
 
 export class UserController {
   private readonly userService = new UserService()
 
   public register = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      logger.info(`Registering user with email: ${req.body.email}`)
       const { name, email, password, confirmPassword } = req.body
       const parsedData = userSignUpSchema.safeParse({
         name,
@@ -46,6 +48,7 @@ export class UserController {
 
   public login = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      logger.info(`User login attempt with email: ${req.body.email}`)
       const { email, password } = req.body
       const parsedData = userLoginSchema.safeParse({
         email,
@@ -78,6 +81,7 @@ export class UserController {
 
   public update = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      logger.info(`Updating user with ID: ${req.user?.id}`)
       const userId = req.user?.id
       if (!userId) {
         throw new ApiError(401, "Unauthorized")
@@ -111,6 +115,7 @@ export class UserController {
 
   public delete = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      logger.info(`Deleting user with ID: ${req.user?.id}`)
       const userId = req.user?.id
       if (!userId) {
         throw new ApiError(401, "Unauthorized")
@@ -133,6 +138,7 @@ export class UserController {
 
   public logout = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      logger.info(`User logout attempt with ID: ${req.user?.id}`)
       const userId = req.user?.id
       if (!userId) {
         throw new ApiError(401, "Unauthorized")
@@ -153,6 +159,7 @@ export class UserController {
     next: NextFunction
   ) => {
     try {
+      logger.info(`Refreshing tokens for user`)
       const refreshToken = req.cookies?.refreshToken ?? req.body?.refreshToken
       if (!refreshToken) {
         throw new ApiError(401, "Refresh token is required")
@@ -183,6 +190,7 @@ export class UserController {
 
   public getUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      logger.info(`Retrieving profile for user with ID: ${req.user?.id}`)
       const userId = req.user?.id
       if (!userId) {
         throw new ApiError(401, "Unauthorized")

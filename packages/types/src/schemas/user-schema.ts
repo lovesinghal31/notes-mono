@@ -9,7 +9,10 @@ const userSignUpSchema = z
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
+    path: ["confirmPassword"],
   })
+
+type UserSignUpSchemaType = z.infer<typeof userSignUpSchema>
 
 const userLoginSchema = z.object({
   email: z.string().email(),
@@ -27,3 +30,4 @@ const userDeleteSchema = z.object({
 })
 
 export { userSignUpSchema, userLoginSchema, userUpdateSchema, userDeleteSchema }
+export type { UserSignUpSchemaType }

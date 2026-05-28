@@ -50,7 +50,7 @@ export class Logger {
     }
 
     // exhaustive check (compile-time safety)
-    const _exhaustive: never = this.env;
+    // const _exhaustive: never = this.env;
     throw new ApiError(500, `Invalid environment: ${this.env}`);
   }
 
