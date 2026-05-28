@@ -23,11 +23,11 @@ export class UserService {
   public login = async (email: string, password: string) => {
     const user = await this.userRepository.findByEmailWithPassword(email)
     if (!user) {
-      throw new ApiError(400, "Invalid email or password")
+      throw new ApiError(400, "Account does not exist with this email")
     }
     const passwordMatch = await bcryptLib.compare(password, user.password_hash)
     if (!passwordMatch) {
-      throw new ApiError(400, "Invalid email or password")
+      throw new ApiError(400, "Password is incorrect")
     }
     const { accessToken, refreshToken } = jwtLib.generateTokens({
       id: user.id,

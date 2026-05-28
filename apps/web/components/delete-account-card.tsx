@@ -19,21 +19,21 @@ import { useRouter } from "next/navigation"
 import { api } from "@/lib/api"
 import { ApiResponse } from "@mono-fun/types"
 
-export function LogoutCard() {
+export function DeleteAccountCard() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = React.useState(false)
 
-  async function onLogoutHandler() {
+  async function onDeleteAccountHandler() {
     try {
       setIsSubmitting(true)
-      const response = await api.post<ApiResponse>("/users/logout")
+      const response = await api.delete<ApiResponse>("/users/delete")
       if (response.data.success) {
-        toast.success("Logout successful!")
+        toast.success("Account deleted successfully!")
         router.push("/auth/login")
       }
     } catch (error) {
       const message = getErrorMessage(error)
-      console.error("Logout error:", message)
+      console.error("Delete account error:", message)
       toast.error(message)
     } finally {
       setIsSubmitting(false)
@@ -43,9 +43,11 @@ export function LogoutCard() {
   return (
     <Card className="w-full max-w-md text-sm/relaxed">
       <CardHeader className="px-4 sm:px-6">
-        <CardTitle className="text-base font-semibold">Logout</CardTitle>
+        <CardTitle className="text-base font-semibold">
+          Delete Account
+        </CardTitle>
         <CardDescription className="text-sm/relaxed">
-          Logout of your account to end your session.
+          Delete your account and all associated data.
         </CardDescription>
       </CardHeader>
       <CardContent className="px-4 sm:px-6">
@@ -54,15 +56,15 @@ export function LogoutCard() {
           size="lg"
           variant="outline"
           className="w-full sm:w-auto"
-          onClick={() => onLogoutHandler()}
+          onClick={() => onDeleteAccountHandler()}
         >
           {isSubmitting ? (
             <>
               <LoaderCircleIcon className="mr-2 size-4 animate-spin" />
-              Logging out...
+              Deleting account...
             </>
           ) : (
-            "Logout"
+            "Delete Account"
           )}
         </Button>
       </CardContent>

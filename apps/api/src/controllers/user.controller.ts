@@ -132,7 +132,11 @@ export class UserController {
       }
       const { message } = await this.userService.delete(parsedData.data.id)
       cache.delete(`user:${userId}`)
-      return res.status(200).json(new ApiResponse(true, message))
+      return res
+        .clearCookie("accessToken", cookies.accessToken)
+        .clearCookie("refreshToken", cookies.refreshToken)
+        .status(200)
+        .json(new ApiResponse(true, message))
     } catch (error) {
       next(error)
     }
