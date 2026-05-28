@@ -15,7 +15,7 @@ export default function RegisterPage() {
               <Sparkles className="h-4 w-4 text-white" />
             </div>
             <span className="gradient-text text-base font-bold tracking-tight">
-              Budgetly
+              Now, let's get you started!
             </span>
           </div>
 

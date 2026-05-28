@@ -16,7 +16,7 @@ export default function LoginPage() {
               <Sparkles className="h-4 w-4 text-white" />
             </div>
             <span className="gradient-text text-base font-bold tracking-tight">
-              Budgetly
+              Now, let's log you in!
             </span>
           </div>
 

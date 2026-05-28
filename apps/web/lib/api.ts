@@ -28,7 +28,7 @@ api.interceptors.response.use(
     if (
       error.response.status === 401 &&
       !originalRequest._retry &&
-      !originalRequest.url?.includes("/users/refresh-token")
+      !originalRequest.url?.includes("/users/refresh-tokens")
     ) {
       if (isRefreshing) {
         return new Promise((resolve) => {
@@ -40,7 +40,7 @@ api.interceptors.response.use(
       originalRequest._retry = true
       isRefreshing = true
       try {
-        const response = await api.post("/users/refresh-token")
+        const response = await api.post("/users/refresh-tokens")
         if (!response.data?.success) {
           isRefreshing = false
           return Promise.reject(error)
