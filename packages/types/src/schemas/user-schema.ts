@@ -19,6 +19,8 @@ const userLoginSchema = z.object({
   password: z.string().min(8),
 })
 
+type UserLoginSchemaType = z.infer<typeof userLoginSchema>
+
 const userUpdateSchema = z.object({
   email: z.string().email().optional(),
   password: z.string().min(8).optional(),
@@ -30,4 +32,4 @@ const userDeleteSchema = z.object({
 })
 
 export { userSignUpSchema, userLoginSchema, userUpdateSchema, userDeleteSchema }
-export type { UserSignUpSchemaType }
+export type { UserSignUpSchemaType, UserLoginSchemaType }

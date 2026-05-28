@@ -1,8 +1,11 @@
 "use client"
+
 import * as React from "react"
+
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
-import { Button } from "@workspace/ui/components/button"
+import { EyeIcon, EyeOffIcon, LoaderCircleIcon } from "lucide-react"
+import { toast } from "sonner"
 import {
   Card,
   CardContent,
@@ -17,53 +20,54 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@workspace/ui/components/field"
+import { Input } from "@workspace/ui/components/input"
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
 } from "@workspace/ui/components/input-group"
+import { Button } from "@workspace/ui/components/button"
+import axios from "axios"
+import { getErrorMessage } from "@/lib/error-handler"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 import {
   ApiResponse,
-  IUser,
-  userSignUpSchema,
-  type UserSignUpSchemaType,
+  ILoginResponse,
+  userLoginSchema,
+  type UserLoginSchemaType,
 } from "@mono-fun/types"
-import axios from "axios"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
-import { getErrorMessage } from "@/lib/error-handler"
-import { Input } from "@workspace/ui/components/input"
-import { EyeIcon, EyeOffIcon, LoaderCircleIcon } from "lucide-react"
-import Link from "next/link"
 
-export function RegisterForm() {
+export function LoginForm() {
   const router = useRouter()
   const [showPassword, setShowPassword] = React.useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
-  const form = useForm<UserSignUpSchemaType>({
-    resolver: zodResolver(userSignUpSchema),
+
+  const form = useForm<UserLoginSchemaType>({
+    resolver: zodResolver(userLoginSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
   })
-  async function onSubmit(data: UserSignUpSchemaType) {
+
+  async function onSubmit(data: UserLoginSchemaType) {
     try {
       setIsSubmitting(true)
-      const response = await axios.post<ApiResponse<IUser>>(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/register`,
-        data,
+      const response = await axios.post<ApiResponse<ILoginResponse>>(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/login`,
+        {
+          email: data.email,
+          password: data.password,
+        },
         {
           withCredentials: true,
         }
       )
       if (response.data.success) {
-        toast.success("Registration successful! Please log in.")
-        router.push("/auth/login")
+        toast.success("Login successful!")
+        router.push("/dashboard/me")
       }
     } catch (error) {
       const message = getErrorMessage(error)
@@ -72,53 +76,32 @@ export function RegisterForm() {
       setIsSubmitting(false)
     }
     form.reset()
+    // setIsLoading(false);
   }
+
   return (
     <Card className="w-full max-w-md text-sm/relaxed">
       <CardHeader className="px-4 sm:px-6">
-        <CardTitle className="text-base font-semibold">Register</CardTitle>
+        <CardTitle className="text-base font-semibold">Login</CardTitle>
         <CardDescription className="text-sm/relaxed">
-          Create an account to manage your notes and access all features.
-          It&apos;s quick and easy!
+          Login to your account to start taking notes and organizing your
+          thoughts!
         </CardDescription>
       </CardHeader>
       <CardContent className="px-4 sm:px-6">
-        <form id="form-register" onSubmit={form.handleSubmit(onSubmit)}>
+        <form id="form-login" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
-            <Controller
-              name="name"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel className="text-sm" htmlFor="form-register-name">
-                    Name
-                  </FieldLabel>
-                  <Input
-                    {...field}
-                    id="form-register-name"
-                    aria-invalid={fieldState.invalid}
-                    className="h-9 px-3 text-base sm:h-8 md:text-sm/relaxed"
-                    placeholder="Enter your name"
-                    autoComplete="off"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
             <Controller
               name="email"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel className="text-sm" htmlFor="form-register-email">
+                  <FieldLabel className="text-sm" htmlFor="form-login-email">
                     Email
                   </FieldLabel>
                   <Input
                     {...field}
-                    type="email"
-                    id="form-register-email"
+                    id="form-login-email"
                     aria-invalid={fieldState.invalid}
                     className="h-9 px-3 text-base sm:h-8 md:text-sm/relaxed"
                     placeholder="Enter your email"
@@ -135,7 +118,7 @@ export function RegisterForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-register-password">
+                  <FieldLabel htmlFor="form-login-password">
                     Password
                   </FieldLabel>
                   <InputGroup
@@ -145,7 +128,7 @@ export function RegisterForm() {
                     <InputGroupInput
                       {...field}
                       type={showPassword ? "text" : "password"}
-                      id="form-register-password"
+                      id="form-login-password"
                       aria-invalid={fieldState.invalid}
                       className="h-9 px-3 text-base sm:h-8 md:text-sm/relaxed"
                       placeholder="Enter your password"
@@ -171,52 +154,10 @@ export function RegisterForm() {
                 </Field>
               )}
             />
-            <Controller
-              name="confirmPassword"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-register-confirm-password">
-                    Confirm Password
-                  </FieldLabel>
-                  <InputGroup
-                    className="h-9 sm:h-8"
-                    data-invalid={fieldState.invalid}
-                  >
-                    <InputGroupInput
-                      {...field}
-                      type={showConfirmPassword ? "text" : "password"}
-                      id="form-register-confirm-password"
-                      aria-invalid={fieldState.invalid}
-                      className="h-9 px-3 text-base sm:h-8 md:text-sm/relaxed"
-                      placeholder="Confirm your password"
-                      autoComplete="off"
-                    />
-                    <InputGroupAddon align="inline-end">
-                      <InputGroupButton
-                        size="icon-sm"
-                        tabIndex={-1}
-                        aria-label={
-                          showConfirmPassword
-                            ? "Hide password"
-                            : "Show password"
-                        }
-                        onMouseDown={(e) => e.preventDefault()}
-                        onClick={() => setShowConfirmPassword((v) => !v)}
-                      >
-                        {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
-                      </InputGroupButton>
-                    </InputGroupAddon>
-                  </InputGroup>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
           </FieldGroup>
         </form>
       </CardContent>
+
       <CardFooter className="px-4 sm:px-6">
         <Field
           orientation="horizontal"
@@ -235,23 +176,23 @@ export function RegisterForm() {
             size="lg"
             type="submit"
             className="flex-1 sm:flex-none"
-            form="form-register"
+            form="form-login"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
               <>
                 <LoaderCircleIcon className="mr-2 size-4 animate-spin" />
-                Submitting...
+                Logging in...
               </>
             ) : (
-              "Submit"
+              "Login"
             )}
           </Button>
         </Field>
       </CardFooter>
       <div className="px-4 pb-4 text-center text-sm text-muted-foreground sm:px-6 sm:pb-6">
-        <Link href="/login" className="text-sm text-primary hover:underline">
-          Already have an account? Log in
+        <Link href="/register" className="text-sm text-primary hover:underline">
+          Don&apos;t have an account? Register here.
         </Link>
       </div>
     </Card>

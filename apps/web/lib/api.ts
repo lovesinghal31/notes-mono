@@ -1,13 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios"
 
-if (!process.env.NEXT_PUBLIC_API_URL) {
-  console.warn(
-    "NEXT_PUBLIC_API_URL is not defined. Defaulting to http://localhost:8000/api/v1"
-  )
-}
-
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1",
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
 })
 
