@@ -53,7 +53,7 @@ model note {
   user_id   String
   folder_id String?
 
-  title   String?
+  title   String
   content String
 
   status NoteStatus @default(ACTIVE)
