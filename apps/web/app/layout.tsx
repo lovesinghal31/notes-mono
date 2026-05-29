@@ -1,6 +1,7 @@
 import { Geist_Mono, Inter } from "next/font/google"
 
 import "@workspace/ui/styles/globals.css"
+import '@mdxeditor/editor/style.css';
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@workspace/ui/lib/utils"
 import { Toaster } from "@workspace/ui/components/sonner"
