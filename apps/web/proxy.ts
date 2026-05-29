@@ -9,7 +9,8 @@ export function proxy(request: NextRequest) {
   const isProtectedRoute =
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/me") ||
-    pathname.startsWith("/auth/logout")
+    pathname.startsWith("/auth/logout") ||
+    pathname.startsWith("/notes")
 
   if (isAuthPage || isHomePage) {
     if (refreshToken) {
@@ -35,6 +36,7 @@ export const config = {
     "/auth/login",
     "/auth/register",
     "/auth/logout",
+    "/notes/:path*",
     "/",
   ],
 }
