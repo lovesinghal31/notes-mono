@@ -15,4 +15,14 @@ router.route("/").post(
   noteController.createNote
 )
 
+router.route("/:id").get(
+  authMiddleware.verifyJWT,
+  rateLimiter.limit({
+    maxRequests: 50,
+    windowSizeInSeconds: 60,
+    endPointName: "note_get",
+  }),
+  noteController.getNoteByIdAndUserId
+)
+
 export { router as noteRouter }

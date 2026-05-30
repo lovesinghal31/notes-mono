@@ -19,4 +19,13 @@ export class NoteRepository {
       select: this.noteSelect,
     })
   }
+  public async getByIdAndUserId(id: string, user_id: string) {
+    return prisma.note.findUnique({
+      where: {
+        id: id,
+        user_id: user_id,
+      },
+      select: this.noteSelect,
+    })
+  }
 }
