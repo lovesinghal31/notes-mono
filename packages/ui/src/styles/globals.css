@@ -3,6 +3,9 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@import "highlight.js/styles/github.css";
+@import "highlight.js/styles/github-dark.css";
+
 @custom-variant dark (&:is(.dark *));
 @source "../../../apps/**/*.{ts,tsx}";
 @source "../../../components/**/*.{ts,tsx}";
@@ -91,22 +94,7 @@
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
 
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-
   --radius: 0.625rem;
-
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
 }
 
 .dark {
@@ -131,26 +119,9 @@
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
 
-  --destructive: oklch(0.704 0.191 22.216);
-
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
-
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
 }
 
 @layer base {
@@ -168,282 +139,285 @@
   }
 }
 
-/* ===========================
-   MDX EDITOR BASE
-=========================== */
-
+/* ======================================
+   MDX EDITOR
+====================================== */
 .mdxeditor {
-  border: none !important;
-  background: transparent !important;
-  min-height: unset !important;
-  height: auto !important;
-}
-
-.mdxeditor-root-contenteditable {
-  min-height: 65vh;
-  padding: 2rem;
-}
-
-.mdxeditor > div {
-  min-height: unset !important;
-}
-
-/* ===========================
-   TYPOGRAPHY
-=========================== */
-
-.mdxeditor h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.mdxeditor h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.mdxeditor h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.mdxeditor ul {
-  list-style: disc;
-  padding-left: 1.5rem;
-}
-
-.mdxeditor ol {
-  list-style: decimal;
-  padding-left: 1.5rem;
-}
-
-.mdxeditor li {
-  margin: 0.25rem 0;
-}
-
-.mdxeditor blockquote {
-  border-left: 4px solid #3f3f46;
-  padding-left: 1rem;
-  color: #a1a1aa;
-}
-
-.mdxeditor pre {
-  border-radius: 12px;
-  overflow-x: auto;
-}
-
-/* ===========================
-   DARK MODE
-=========================== */
-
-/* ===========================
-   BRIGHTER DARK MODE CONTENT
-=========================== */
-
-.dark .mdxeditor-root-contenteditable {
-  background: #09090b !important;
-  color: #f8fafc !important;
-}
-
-/* Paragraphs */
-.dark .mdxeditor p,
-.dark .mdxeditor li,
-.dark .mdxeditor span {
-  color: #e5e7eb !important;
-}
-
-/* Headings */
-.dark .mdxeditor h1 {
-  color: #ffffff !important;
-  font-size: 2rem;
-  font-weight: 700;
-}
-
-.dark .mdxeditor h2 {
-  color: #f8fafc !important;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.dark .mdxeditor h3,
-.dark .mdxeditor h4,
-.dark .mdxeditor h5,
-.dark .mdxeditor h6 {
-  color: #f1f5f9 !important;
-  font-weight: 600;
-}
-
-/* Bold text */
-.dark .mdxeditor strong {
-  color: #ffffff !important;
-  font-weight: 700;
-}
-
-/* Italic */
-.dark .mdxeditor em {
-  color: #e5e7eb !important;
-}
-
-/* Lists */
-.dark .mdxeditor ul,
-.dark .mdxeditor ol {
-  color: #e5e7eb !important;
-}
-
-/* Blockquote */
-.dark .mdxeditor blockquote {
-  border-left: 4px solid #52525b;
-  color: #e2e8f0 !important;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-/* Inline code */
-.dark .mdxeditor code {
-  background: #18181b;
-  color: #f8fafc !important;
-  padding: 2px 6px;
-  border-radius: 6px;
-}
-
-/* Code editor text */
-.dark .cm-content {
-  color: #f8fafc !important;
-}
-
-/* Placeholder text */
-.dark .mdxeditor [data-placeholder]::before {
-  color: #71717a !important;
-  opacity: 0.8;
-}
-
-/* ===========================
-   TOOLBAR
-=========================== */
-
-.dark .mdxeditor-toolbar {
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--foreground);
+} /* Toolbar */
+.mdxeditor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 20;
+  padding: 0.75rem 1rem;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+.mdxeditor-toolbar button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  color: var(--muted-foreground) !important;
+  transition: all 0.2s ease;
+}
+.mdxeditor-toolbar button:hover {
+  background: var(--accent);
+  color: var(--foreground) !important;
+}
+.mdxeditor-toolbar button[data-state="on"] {
+  background: var(--accent);
+  color: var(--foreground) !important;
+}
+.mdxeditor-toolbar svg {
+  width: 18px;
+  height: 18px;
+}
+.mdxeditor-toolbar [role="separator"] {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin-inline: 4px;
+} /* Dropdown */
+.mdxeditor [role="combobox"] {
+  min-width: 120px;
+  height: 34px;
+  padding-inline: 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--foreground) !important;
+}
+.mdxeditor [role="combobox"]:hover {
+  background: var(--accent);
+}
+.mdxeditor [role="listbox"] {
+  background: var(--popover) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.3);
+}
+.mdxeditor [role="option"] {
   padding: 10px 14px;
-
-  background: #111827 !important;
-  border-bottom: 1px solid #27272a !important;
+  color: var(--foreground);
 }
-
-.dark .mdxeditor-toolbar button {
-  color: #d4d4d8 !important;
+.mdxeditor [data-highlighted] {
+  background: var(--accent);
+} /* Editor content */
+.mdxeditor-root-contenteditable {
+  min-height: 65vh;
+  padding: 2.5rem;
+  background: var(--card);
+  color: var(--foreground) !important;
+  font-size: 1rem;
+  line-height: 1.8;
+  caret-color: var(--foreground);
+} /* Placeholder */
+.mdxeditor [data-placeholder]::before {
+  color: var(--muted-foreground) !important;
+  opacity: 0.7;
+} /* Typography */
+.mdxeditor h1,
+.mdxeditor h2,
+.mdxeditor h3,
+.mdxeditor h4,
+.mdxeditor h5,
+.mdxeditor h6 {
+  color: var(--foreground);
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.mdxeditor h1 {
+  font-size: 2rem;
+}
+.mdxeditor h2 {
+  font-size: 1.6rem;
+}
+.mdxeditor h3 {
+  font-size: 1.3rem;
+}
+.mdxeditor p {
+  color: var(--foreground);
+  margin: 0.75rem 0;
+}
+.mdxeditor ul,
+.mdxeditor ol {
+  padding-left: 1.75rem;
+  margin: 1rem 0;
+}
+.mdxeditor li {
+  margin: 0.35rem 0;
+}
+.mdxeditor blockquote {
+  margin: 1rem 0;
+  padding: 1rem 1.25rem;
+  border-left: 4px solid var(--primary);
+  background: color-mix(in oklch, var(--muted) 35%, transparent);
+  border-radius: 0 14px 14px 0;
+  color: var(--muted-foreground);
+}
+.mdxeditor code:not(pre code) {
+  background: var(--muted);
+  padding: 2px 8px;
   border-radius: 8px;
+  font-size: 0.9em;
+}
+.mdxeditor pre {
+  overflow-x: auto;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+} /* CodeMirror */
+.cm-editor {
+  background: transparent !important;
+}
+.cm-content {
+  color: var(--foreground) !important;
+  caret-color: var(--foreground);
+}
+.cm-gutters {
+  background: color-mix(in oklch, var(--muted) 30%, transparent) !important;
+  border-right: 1px solid var(--border) !important;
+}
+.cm-cursor {
+  border-left-color: var(--foreground) !important;
 }
 
-.dark .mdxeditor-toolbar svg {
-  color: #d4d4d8 !important;
+/* Dialogs — inside .mdxeditor */
+.mdxeditor [role="dialog"] {
+  background: var(--popover) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 18px !important;
+  color: var(--foreground) !important;
 }
-
-.dark .mdxeditor-toolbar button:hover {
-  background: #27272a !important;
-}
-
-.dark .mdxeditor-toolbar button[data-state="on"] {
-  background: #2563eb !important;
-  color: white !important;
-}
-
-.dark .mdxeditor-toolbar [role="separator"] {
-  background: #3f3f46 !important;
-}
-
-/* ===========================
-   SELECT / DROPDOWN
-=========================== */
-
-.dark .mdxeditor [role="combobox"] {
-  background: #18181b !important;
-  color: #fafafa !important;
-  border: 1px solid #3f3f46 !important;
-  border-radius: 8px;
-}
-
-.dark [data-radix-popper-content-wrapper] {
-  z-index: 9999 !important;
-}
-
-.dark .mdxeditor [role="listbox"] {
-  background: #18181b !important;
-  border: 1px solid #27272a !important;
-  border-radius: 12px;
-}
-
-.dark .mdxeditor [role="option"] {
-  color: #d4d4d8 !important;
-}
-
-.dark .mdxeditor [data-highlighted] {
-  background: #2563eb !important;
-  color: white !important;
-}
-
-/* ===========================
-   CODE BLOCK
-=========================== */
-
-.dark .cm-editor,
-.dark .cm-scroller {
-  background: #111827 !important;
-}
-
-.dark .cm-gutters {
-  background: #18181b !important;
-  border-right: 1px solid #27272a !important;
-}
-
-.dark .cm-content {
-  color: #e4e4e7 !important;
-}
-
-.dark .cm-cursor {
-  border-left-color: #ffffff !important;
-}
-
-/* ===========================
-   DIALOGS
-=========================== */
-
-.dark .mdxeditor [role="dialog"] {
-  background: #18181b !important;
-  color: #fafafa !important;
-  border: 1px solid #27272a !important;
-  border-radius: 16px !important;
-}
-
-.dark .mdxeditor [role="dialog"] input,
-.dark .mdxeditor [role="dialog"] textarea {
-  background: #09090b !important;
-  border: 1px solid #3f3f46 !important;
-  color: #fafafa !important;
+.mdxeditor [role="dialog"] input,
+.mdxeditor [role="dialog"] textarea {
+  background: var(--background) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
   border-radius: 10px !important;
 }
 
-.dark .mdxeditor [role="dialog"] button[type="button"] {
-  background: #27272a !important;
+/* Dialogs & dropdowns — portaled to popup container or body */
+.mdxeditor-popup-container [role="dialog"],
+[data-radix-popper-content-wrapper] [role="dialog"],
+.mdxeditor ~ [role="dialog"],
+body > [role="dialog"] {
+  background: var(--popover) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 18px !important;
+  color: var(--foreground) !important;
+}
+.mdxeditor-popup-container [role="dialog"] input,
+.mdxeditor-popup-container [role="dialog"] textarea,
+[data-radix-popper-content-wrapper] [role="dialog"] input,
+body > [role="dialog"] input,
+body > [role="dialog"] textarea {
+  background: var(--background) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--foreground) !important;
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+}
+.mdxeditor-popup-container [role="dialog"] label,
+[data-radix-popper-content-wrapper] [role="dialog"] label,
+body > [role="dialog"] label {
+  color: var(--foreground) !important;
+}
+.mdxeditor-popup-container [role="dialog"] button,
+[data-radix-popper-content-wrapper] [role="dialog"] button,
+body > [role="dialog"] button {
+  color: var(--foreground) !important;
 }
 
-.dark .mdxeditor [role="dialog"] button[type="submit"] {
-  background: #2563eb !important;
-  color: white !important;
+/* Listbox/dropdown — portaled */
+.mdxeditor-popup-container [role="listbox"],
+[data-radix-popper-content-wrapper] [role="listbox"] {
+  background: var(--popover) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.3);
+}
+.mdxeditor-popup-container [role="option"],
+[data-radix-popper-content-wrapper] [role="option"] {
+  padding: 10px 14px;
+  color: var(--foreground) !important;
+}
+.mdxeditor-popup-container [data-highlighted],
+[data-radix-popper-content-wrapper] [data-highlighted] {
+  background: var(--accent) !important;
 }
 
-/* ===========================
-   POPUP OVERFLOW FIX
-=========================== */
+/* ======================================
+   MDX EDITOR - DARK MODE OVERRIDES
+====================================== */
 
+/* Override MDXEditor's built-in light background/foreground for dark mode */
+.dark .mdxeditor,
+.dark .mdxeditor-toolbar,
+.dark .mdxeditor-root-contenteditable {
+  background: var(--card);
+  color: var(--foreground);
+}
+
+/* Ensure all MDXEditor internal text inherits dark foreground */
+.dark .mdxeditor [class*="_contentEditable_"],
+.dark .mdxeditor [contenteditable="true"] {
+  color: var(--foreground) !important;
+  caret-color: var(--foreground) !important;
+}
+
+/* Fix table borders in dark mode */
+.dark .mdxeditor table {
+  border-color: var(--border);
+}
+.dark .mdxeditor th,
+.dark .mdxeditor td {
+  border-color: var(--border);
+  color: var(--foreground);
+}
+
+/* Fix link color in dark mode */
+.dark .mdxeditor a {
+  color: var(--primary);
+}
+
+/* Fix list markers in dark mode */
+.dark .mdxeditor li::marker {
+  color: var(--muted-foreground);
+}
+
+/* Fix hr/thematic break in dark mode */
+.dark .mdxeditor hr {
+  border-color: var(--border);
+}
+
+/* Fix select/dropdown for block type in dark mode */
+.dark .mdxeditor select {
+  background: var(--card);
+  color: var(--foreground);
+  border-color: var(--border);
+}
+
+/* Popup overflow fix */
 .mdxeditor-popup-container {
   min-height: 0 !important;
   height: auto !important;
   position: absolute !important;
   pointer-events: none;
 }
-
 .mdxeditor-popup-container * {
   pointer-events: auto;
 }

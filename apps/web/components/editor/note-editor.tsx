@@ -1,5 +1,7 @@
 "use client"
 
+import { useTheme } from "next-themes"
+
 import {
   MDXEditor,
   headingsPlugin,
@@ -34,12 +36,15 @@ type Props = {
 }
 
 export default function NoteEditor({ initialContent, onChange }: Props) {
+  const { resolvedTheme } = useTheme()
+  const isDark = resolvedTheme === "dark"
+
   return (
     <div className="rounded-lg border bg-background">
       <MDXEditor
         markdown={initialContent}
         onChange={onChange}
-        className="mdx-editor"
+        className={isDark ? "dark-theme dark-editor" : ""}
         plugins={[
           headingsPlugin(),
           listsPlugin(),
@@ -111,3 +116,4 @@ export default function NoteEditor({ initialContent, onChange }: Props) {
     </div>
   )
 }
+

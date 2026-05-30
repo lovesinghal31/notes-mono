@@ -53,7 +53,7 @@ model note {
   user_id   String
   folder_id String?
 
-  title   String?
+  title   String
   content String
 
   status NoteStatus @default(ACTIVE)
@@ -73,8 +73,10 @@ model note {
   note_tags    note_tag[]
   public_share public_share?
 
+  @@index([id])
   @@index([user_id])
   @@index([folder_id])
+  @@index([user_id, id])
   @@index([user_id, status])
   @@index([user_id, is_pinned])
   @@index([user_id, is_favorite])
