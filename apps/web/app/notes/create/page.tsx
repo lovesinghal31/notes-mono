@@ -1,37 +1,57 @@
 "use client"
 
+import React from "react"
+import dynamic from "next/dynamic"
+import { Controller, useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+
 import { api } from "@/lib/api"
 import { getErrorMessage } from "@/lib/error-handler"
-import { ApiResponse, INote } from "@mono-fun/types"
+
+import {
+  ApiResponse,
+  createNoteSchema,
+  CreateNoteSchemaType,
+  INote,
+} from "@mono-fun/types"
+
 import { Button } from "@workspace/ui/components/button"
 import { Input } from "@workspace/ui/components/input"
-import dynamic from "next/dynamic"
-import React from "react"
-import { toast } from "sonner"
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@workspace/ui/components/field"
 
 const NoteEditor = dynamic(() => import("@/components/editor/note-editor"), {
   ssr: false,
 })
 
 export default function Page() {
-  const [content, setContent] = React.useState(
-    "Start writing your note here..."
-  )
-  const [title, setTitle] = React.useState("")
-
+  const router = useRouter()
   const [saving, setSaving] = React.useState(false)
 
-  const handleSave = async () => {
+  const form = useForm<CreateNoteSchemaType>({
+    resolver: zodResolver(createNoteSchema),
+    defaultValues: {
+      title: "",
+      content: "Start writing your note here...",
+    },
+  })
+
+  const onSubmit = async (data: CreateNoteSchemaType) => {
     try {
       setSaving(true)
-      const response = await api.post<ApiResponse<INote>>("/notes", {
-        title,
-        content,
-      })
+
+      const response = await api.post<ApiResponse<INote>>("/notes", data)
+
       if (response.data.success) {
         toast.success("Note created successfully!")
-        // redirect to the note reader page
       }
+      router.push(`/notes/${response.data.data?.id}`)
     } catch (error) {
       const message = getErrorMessage(error)
       toast.error(message)
@@ -49,24 +69,65 @@ export default function Page() {
             <h1 className="text-2xl font-bold tracking-tight">Create Note</h1>
           </div>
 
-          <Button onClick={handleSave} disabled={saving} className="min-w-24">
+          <Button
+            form="create-note-form"
+            type="submit"
+            disabled={saving}
+            className="min-w-24"
+          >
             {saving ? "Saving..." : "Save"}
           </Button>
         </div>
-        {/* Title Input */}
-        <div className="mb-4">
-          <Input
-            type="text"
-            placeholder="Note Title"
-            className="bg-background text-lg font-bold placeholder:text-muted-foreground focus:outline-none"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
-        {/* Editor */}
-        <div className="rounded-2xl border bg-card shadow-sm">
-          <NoteEditor initialContent={content} onChange={setContent} />
-        </div>
+
+        <form id="create-note-form" onSubmit={form.handleSubmit(onSubmit)}>
+          <FieldGroup>
+            {/* Title */}
+            <Controller
+              name="title"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="note-title">Title</FieldLabel>
+
+                  <Input
+                    {...field}
+                    id="note-title"
+                    type="text"
+                    placeholder="Note Title"
+                    aria-invalid={fieldState.invalid}
+                    className="bg-background text-lg font-bold placeholder:text-muted-foreground"
+                  />
+
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            {/* Editor */}
+            <Controller
+              name="content"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel>Content</FieldLabel>
+
+                  {/* <div className="rounded-xl border bg-card shadow-sm"> */}
+                  <NoteEditor
+                    initialContent={field.value}
+                    onChange={field.onChange}
+                  />
+                  {/* </div> */}
+
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+        </form>
       </div>
     </main>
   )
