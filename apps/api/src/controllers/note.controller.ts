@@ -1,5 +1,11 @@
 import type { Request, Response, NextFunction } from "express"
-import { ApiError, ApiResponse, createNoteSchema, INote } from "@mono-fun/types"
+import {
+  ApiError,
+  ApiResponse,
+  createNoteSchema,
+  editNoteSchema,
+  INote,
+} from "@mono-fun/types"
 import { NoteService } from "@/services/note.service.js"
 import { cache } from "@/lib/cache.js"
 import { logger } from "@/logger/index.js"
@@ -55,6 +61,42 @@ export class NoteController {
       }
       return res.json(
         new ApiResponse<INote>(true, "Note fetched successfully", note)
+      )
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  public editNote = async (
+    req: Request<{ id: string }>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      logger.info(
+        `Editing note with ID: ${req.params.id} for user: ${req.user?.id}`
+      )
+      const user_id = req.user?.id
+      const { id } = req.params
+      const { title, content } = req.body
+      const parsedData = editNoteSchema.safeParse({
+        id,
+        title,
+        content,
+      })
+      if (!parsedData.success) {
+        const errorMessages = parsedData.error.issues.map(
+          (issue) => issue.message
+        )
+        throw new ApiError(400, errorMessages.join(", "))
+      }
+      const editedNote = await this.noteService.edit(id, user_id, {
+        title: parsedData.data.title,
+        content: parsedData.data.content,
+      })
+      cache.set<INote>(`note:${user_id}:${id}`, editedNote, 3600)
+      return res.json(
+        new ApiResponse<INote>(true, "Note edited successfully", editedNote)
       )
     } catch (error) {
       next(error)
