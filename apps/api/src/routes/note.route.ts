@@ -25,4 +25,14 @@ router.route("/:id").get(
   noteController.getNoteByIdAndUserId
 )
 
+router.route("/:id").put(
+  authMiddleware.verifyJWT,
+  rateLimiter.limit({
+    maxRequests: 20,
+    windowSizeInSeconds: 60,
+    endPointName: "note_update",
+  }),
+  noteController.editNote
+)
+
 export { router as noteRouter }

@@ -9,6 +9,7 @@ export class NoteRepository {
     created_at: true,
     updated_at: true,
   }
+
   public async create(title: string, content: string, user_id: string) {
     return prisma.note.create({
       data: {
@@ -19,12 +20,31 @@ export class NoteRepository {
       select: this.noteSelect,
     })
   }
+
   public async getByIdAndUserId(id: string, user_id: string) {
     return prisma.note.findUnique({
       where: {
         id: id,
         user_id: user_id,
       },
+      select: this.noteSelect,
+    })
+  }
+
+  public async edit(
+    id: string,
+    user_id: string,
+    data: Partial<{
+      title: string
+      content: string
+    }>
+  ) {
+    return prisma.note.update({
+      where: {
+        id: id,
+        user_id: user_id,
+      },
+      data,
       select: this.noteSelect,
     })
   }
